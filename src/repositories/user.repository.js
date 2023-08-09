@@ -15,7 +15,7 @@ export async function createUser(body){
     const result = await db.query(`INSERT INTO usuario 
     (nome, phone, cpf, email, senha,foto) 
     VALUES 
-    ($1,$2,$3,$4,$5,%6)`
+    ($1,$2,$3,$4,$5,$6)`
     ,[nome,phone, CPF,email,senha, foto]);
     return result;
 }
