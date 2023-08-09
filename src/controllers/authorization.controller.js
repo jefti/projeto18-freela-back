@@ -1,7 +1,7 @@
 import { checkUser, createUser, getUsersByCPF, getUsersByEmail } from "../repositories/user.repository.js";
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';  
-import {createSession} from "../repositories/session.repository.js";
+import {DeleteSession, createSession} from "../repositories/session.repository.js";
 
 export async function registerUser(req, res){
     try{
@@ -27,8 +27,18 @@ export async function authorizeLogin(req, res){
         delete usuario.rows[0].senha;
         const token = uuid();
         await createSession(token, usuario.rows[0].id);
-
         return res.status(200).send({token});
+    }catch(err){
+        return res.status(500).send(err.message);
+    }
+}
+
+export async function authorizeLogout(req,res){
+    try{
+        const usuario = res.locals.user;
+        delete res.locals.user;
+        await DeleteSession(usuario.token);
+        res.sendStatus(204);
     }catch(err){
         return res.status(500).send(err.message);
     }
