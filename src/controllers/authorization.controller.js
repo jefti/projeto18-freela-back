@@ -27,7 +27,7 @@ export async function authorizeLogin(req, res){
         delete usuario.rows[0].senha;
         const token = uuid();
         await createSession(token, usuario.rows[0].id);
-        return res.status(200).send({token});
+        return res.status(200).send({...usuario.rows[0],token});
     }catch(err){
         return res.status(500).send(err.message);
     }
