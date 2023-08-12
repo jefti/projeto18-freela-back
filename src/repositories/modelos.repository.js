@@ -55,7 +55,7 @@ JOIN fotos pic ON  pic."idModelo" = pkmn.id
 JOIN especies esp ON esp.id = pkmn."idEspecie"
 JOIN usuario u on u.id = pkmn."idUsuario"
 JOIN qualidades q on q.id = pkmn."idQualidade"
-WHERE pkmn.id = 4;`
+WHERE pkmn.id = $1;`
     ,[id]);
-    return resp.rows;
+    return resp.rows[0];
 }
