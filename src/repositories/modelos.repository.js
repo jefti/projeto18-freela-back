@@ -33,3 +33,29 @@ export async function AllPokemons(){
 `);
 return resp.rows;
 }
+
+export async function getPokemon(id){
+    const resp = await db.query(`
+SELECT
+	pkmn.id AS "idPokemon",
+	pkmn.nome,
+	pkmn.avaliable,
+	esp.nome AS especie,
+	q.nome AS qualidade,
+	pic.foto AS foto,
+	pic.comentario AS "comentarioFoto",
+	pic."createdAt" AS "dataFoto",
+	pkmn.descricao,diaria,
+	u.nome AS responsavel,
+	u.phone AS telefone,
+	u.email AS email,
+	u.foto AS "fotoUsuario"
+FROM modelos AS pkmn 
+JOIN fotos pic ON  pic."idModelo" = pkmn.id
+JOIN especies esp ON esp.id = pkmn."idEspecie"
+JOIN usuario u on u.id = pkmn."idUsuario"
+JOIN qualidades q on q.id = pkmn."idQualidade"
+WHERE pkmn.id = 4;`
+    ,[id]);
+    return resp.rows;
+}
