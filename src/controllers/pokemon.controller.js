@@ -1,4 +1,4 @@
-import { AllPokemons, YourPokemons, getPokemon } from "../repositories/modelos.repository.js";
+import { AllPokemons, YourPokemons, getAny, getPokemon } from "../repositories/modelos.repository.js";
 
 export async function getYourPokemons(req, res){
     try{
@@ -25,6 +25,16 @@ try{
     const resp = await getPokemon(id);
     if(!resp) return res.status(404).send('Não encontrado.');
     return res.send(resp);
+}catch(err){
+    return res.status(500).send(err.message);        
+}
+}
+
+export async function getPokemonByAny(req,res){
+try{
+    const{key} = req.params;
+    const lista = await getAny(key);
+    return res.send(lista.rows);
 }catch(err){
     return res.status(500).send(err.message);        
 }
