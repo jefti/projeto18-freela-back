@@ -1,4 +1,4 @@
-import { AllPokemons, YourPokemons, getAny, getPokemon } from "../repositories/modelos.repository.js";
+import { AllPokemons, AllYourPokemons, YourPokemons, getAny, getPokemon } from "../repositories/modelos.repository.js";
 
 export async function getYourPokemons(req, res){
     try{
@@ -9,6 +9,16 @@ export async function getYourPokemons(req, res){
         return res.status(500).send(err.message);        
     }
 };
+
+export async function getYourPokemonsAllList(req,res){
+    try{
+        const {user} = res.locals;
+        const lista = await AllYourPokemons(user.id);
+        return res.send(lista);
+    }catch(err){
+        return res.status(500).send(err.message);        
+    }
+}
 
 export async function getHomeList(req, res){
 try{

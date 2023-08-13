@@ -11,6 +11,21 @@ export async function YourPokemons(id){
     return resp.rows;
 }
 
+export async function AllYourPokemons(id){
+    const resp = await db.query(`SELECT
+	pkmn.id,
+	pkmn.nome,
+	esp.nome AS especie,
+	pkmn.avaliable,
+	pic.foto
+    FROM modelos AS pkmn
+    JOIN fotos pic ON pic."idModelo" = pkmn.id
+    JOIN especies esp ON esp.id = pkmn."idEspecie"
+    WHERE pkmn."idUsuario" = $1;`,[id]);
+    return resp.rows;
+}
+
+
 export async function AllPokemons(){
     const resp = await db.query(`
     SELECT 
