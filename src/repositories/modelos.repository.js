@@ -104,3 +104,27 @@ export async function getAny(search){
     `,[`%${search.toLowerCase()}%`]);
     return resp;
 }
+
+export async function SetAvaliable(value,idpkmn,iduser){
+    await db.query(`
+    UPDATE modelos 
+    SET avaliable = $1
+    WHERE id = $2 AND "idUsuario"=$3;
+    `,[value,idpkmn,iduser]);
+}
+
+export async function createModelo(nome,descricao,diaria,idUsuario,idEspecie){
+    const resp = await db.query(`
+    INSERT INTO modelos (nome,descricao,diaria,"idUsuario","idQualidade","idEspecie") 
+	VALUES (
+		$1,
+		$2,
+		$3,
+		$4,
+		1,
+		$5)
+	returning id;
+	`,[nome,descricao,diaria,idUsuario,idEspecie]);
+    const obj = resp.rows;
+    return obj;
+}

@@ -1,4 +1,6 @@
-import { AllPokemons, AllYourPokemons, YourPokemons, getAny, getPokemon } from "../repositories/modelos.repository.js";
+import { CreateEspecie, SearchEspecie } from "../repositories/especies.repository.js";
+import { CreateFoto } from "../repositories/fotos.repository.js";
+import { AllPokemons, AllYourPokemons, SetAvaliable, YourPokemons, createModelo, getAny, getPokemon } from "../repositories/modelos.repository.js";
 
 export async function getYourPokemons(req, res){
     try{
@@ -48,4 +50,31 @@ try{
 }catch(err){
     return res.status(500).send(err.message);        
 }
+}
+
+export async function setDisponivel(req, res){
+    try{
+        const {user} = res.locals;
+        const {id,value} = req.params;
+        await SetAvaliable(value, id, user.id);
+        return res.sendStatus(200);
+    }catch(err){
+        return res.status(500).send(err.message);        
+    }
+};
+
+export async function CreatePokemon(req,res){
+    try{
+        const {user} = res.locals;
+        const {nome,descricao,diaria,especie,foto,comentarioFoto} = req.body;
+        let objEspecie = await SearchEspecie(especie);
+        if(objEspecie.length === 0 ) objEspecie = await CreateEspecie(especie);
+        const idEspecie = objEspecie[0].id;
+        const objModelo = await createModelo(nome,descricao,diaria,user.id,idEspecie);
+        const idModelo = objModelo[0].id;
+        await CreateFoto(foto,comentarioFoto,idModelo);
+        return (res.send(objModelo));
+    }catch(err){
+        return res.status(500).send(err.message);        
+    }
 }
